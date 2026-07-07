@@ -2,35 +2,33 @@ package org.example
 
 fun main() {
     priorityDispatcher()
-    println("#############")
+    separator()
 
     waypointsReverser()
-    println("#############")
+    separator()
 
     maxWeightFilter()
-    println("#############")
+    separator()
 
     palindromeChecker()
-    println("#############")
+    separator()
 
-    binarySearchLookup()
+    binarySearchLookup(intArrayOf(10, 30, 45, 77, 96, 101), 30)
 }
+
+fun separator() = println("#############")
 
 fun priorityDispatcher() {
     println("Problem 1: Priority Dispatcher")
     for (packageIndex in 1..50) {
-        val isMultipleOf3 = packageIndex % 3 == 0
-        val isMultipleOf5 = packageIndex % 5 == 0
-        val isPriorityPackage = isMultipleOf3 && isMultipleOf5
-        if (isPriorityPackage) {
-            println("PriorityExpress")
-        } else if (isMultipleOf3) {
-            println("Express")
-        } else if (isMultipleOf5) {
-            println("Freight")
-        } else {
-            println(packageIndex)
-        }
+        println(
+            when {
+                packageIndex % 15 == 0 -> "PriorityExpress"
+                packageIndex % 3 == 0 -> "Express"
+                packageIndex % 5 == 0 -> "Freight"
+                else -> packageIndex
+            }
+        )
     }
 }
 
@@ -38,28 +36,32 @@ fun waypointsReverser() {
     println("Problem 2: Waypoints Reverser")
 
     val route = "HubA → HubB → HubC"
+
     var currentHub = ""
-    var hub1 = ""
-    var hub2 = ""
-    var hub3 = ""
-    var hubCounter = 1
-    for (i in 0..route.length - 1) {
+    var firstHub = ""
+    var secondHub = ""
+    var thirdHub = ""
+    var hubNumber = 1
 
-        if (route[i] != '→' && route[i] != ' ') {
-            currentHub += route[i]
-        } else if (route[i] == '→') {
+    for (routeIndex in 0 until route.length) {
+        val currentChar = route[routeIndex]
 
-            if (hubCounter == 1) {
-                hub1 = currentHub
-            } else if (hubCounter == 2) {
-                hub2 = currentHub
+        if (currentChar != '→' && currentChar != ' ') {
+            currentHub += currentChar
+        } else if (currentChar == '→') {
+            if (hubNumber == 1) {
+                firstHub = currentHub
+            } else if (hubNumber == 2) {
+                secondHub = currentHub
             }
-            hubCounter++
+
+            hubNumber++
             currentHub = ""
         }
     }
-    hub3 = currentHub
-    println("$hub3 -> $hub2 -> $hub1")
+
+    thirdHub = currentHub
+    println("$thirdHub -> $secondHub -> $firstHub")
 }
 
 fun maxWeightFilter() {
@@ -97,34 +99,29 @@ fun palindromeChecker() {
     }
 }
 
-fun binarySearchLookup() {
-    println("Problem 5: Binary Search Lookup ")
-    val trackingIds = intArrayOf(101, 205, 309, 320, 412, 518, 620)
-    val targetTrackingId = 412
+fun binarySearchLookup(trackingIds: IntArray, target: Int): Int {
+    println("Problem 5: Binary Search Lookup")
 
     var left = 0
     var right = trackingIds.size - 1
-    var isFound = false
 
     while (left <= right) {
-
         val mid = (left + right) / 2
 
         println("Checking: ${trackingIds[mid]}")
 
-        if (trackingIds[mid] == targetTrackingId) {
-            println("Found")
-            isFound = true
-            break
-        } else if (trackingIds[mid] > targetTrackingId) {
+        if (trackingIds[mid] == target) {
+            println("Found at index $mid")
+            println("Time Complexity: O(log n)")
+            return mid
+        } else if (trackingIds[mid] > target) {
             right = mid - 1
         } else {
             left = mid + 1
         }
     }
 
-    if (!isFound) {
-        println("Not Found")
-    }
-
+    println("Not Found")
+    println("Time Complexity: O(log n)")
+    return -1
 }
